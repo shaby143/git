@@ -3613,6 +3613,10 @@ static size_t append_system_bin_dirs(char *path, size_t size)
 	    strip_suffix_mem(prefix, &len, "\\mingw64\\bin"))
 		off += xsnprintf(path + off, size - off,
 				 "%.*s\\mingw64\\bin;", (int)len, prefix);
+	else if (strip_suffix_mem(prefix, &len, "\\clangarm64\\libexec\\git-core") ||
+	    strip_suffix_mem(prefix, &len, "\\clangarm64\\bin"))
+		off += xsnprintf(path + off, size - off,
+				 "%.*s\\clangarm64\\bin;", (int)len, prefix);
 	else if (strip_suffix_mem(prefix, &len, "\\mingw32\\libexec\\git-core") ||
 		 strip_suffix_mem(prefix, &len, "\\mingw32\\bin"))
 		off += xsnprintf(path + off, size - off,
@@ -3718,9 +3722,7 @@ static void setup_windows_environment(void)
 		char buf[32768];
 		size_t off = 0;
 
-		xsnprintf(buf, sizeof(buf),
-			  "MINGW%d", (int)(sizeof(void *) * 8));
-		setenv("MSYSTEM", buf, 1);
+		setenv("MSYSTEM", ENSURE_MSYSTEM_IS_SET, 1);
 
 		if (home)
 			off += xsnprintf(buf + off, sizeof(buf) - off,
