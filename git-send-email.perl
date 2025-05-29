@@ -1788,7 +1788,9 @@ EOF
 		if (is_outlook($smtp_server)) {
 			if ($smtp->message =~ /<([^>]+)>/) {
 				$message_id = "<$1>";
-				printf __("Outlook reassigned Message-ID to: %s\n"), $message_id;
+				# Replace the original Message-ID in $header with the new one
+				$header =~ s/^(Message-ID:\s*).*\n/${1}$message_id\n/m;
+				printf __("Outlook reassigned Message-ID to: %s\n"), $message_id if $smtp->debug;
 			} else {
 				warn __("Warning: Could not retrieve Message-ID from server response.\n");
 			}
