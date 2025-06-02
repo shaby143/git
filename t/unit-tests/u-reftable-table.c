@@ -1,5 +1,5 @@
 #include "test-lib.h"
-#include "lib-reftable-clar.h"
+#include "lib-reftable.h"
 #include "reftable/blocksource.h"
 #include "reftable/constants.h"
 #include "reftable/iter.h"
