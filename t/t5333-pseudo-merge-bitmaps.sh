@@ -453,7 +453,8 @@ test_expect_success 'use pseudo-merge in boundary traversal' '
 		git config bitmapPseudoMerge.test.pattern refs/ &&
 		git config bitmapPseudoMerge.test.threshold now &&
 		git config bitmapPseudoMerge.test.stableThreshold now &&
-		export GIT_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL=1 &&
+		GIT_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL=1 &&
+		export GIT_TEST_PACK_USE_BITMAP_BOUNDARY_TRAVERSAL &&
 
 		test_commit A &&
 		git repack -adb &&
