@@ -1008,6 +1008,24 @@ static int auth_plain(struct imap_store *ctx, const char *prompt UNUSED)
 	return 0;
 }
 
+static int auth_cram_md5(struct imap_store *ctx, const char *prompt)
+{
+	int ret;
+	char *response;
+
+	response = cram(prompt, ctx->cfg->user, ctx->cfg->pass);
+
+	ret = socket_write(&ctx->imap->buf.sock, response, strlen(response));
+	if (ret != strlen(response)) {
+		free(response);
+		return error("IMAP error: sending response failed");
+	}
+
+	free(response);
+
+	return 0;
+}
+
 static int auth_oauthbearer(struct imap_store *ctx, const char *prompt UNUSED)
 {
 	int ret;
@@ -1050,37 +1068,12 @@ static int auth_xoauth2(struct imap_store *ctx, const char *prompt UNUSED)
 
 #else
 
-static char *cram(const char *challenge_64 UNUSED,
-		  const char *user UNUSED,
-		  const char *pass UNUSED)
-{
-	die("If you want to use CRAM-MD5 authenticate method, "
-	    "you have to build git-imap-send with OpenSSL library.");
-}
-
 #define auth_plain NULL
+#define auth_cram_md5 NULL
 #define auth_oauthbearer NULL
 #define auth_xoauth2 NULL
 
 #endif
-
-static int auth_cram_md5(struct imap_store *ctx, const char *prompt)
-{
-	int ret;
-	char *response;
-
-	response = cram(prompt, ctx->cfg->user, ctx->cfg->pass);
-
-	ret = socket_write(&ctx->imap->buf.sock, response, strlen(response));
-	if (ret != strlen(response)) {
-		free(response);
-		return error("IMAP error: sending response failed");
-	}
-
-	free(response);
-
-	return 0;
-}
 
 static void server_fill_credential(struct imap_server_conf *srvc, struct credential *cred)
 {
@@ -1287,6 +1280,13 @@ static struct imap_store *imap_open_store(struct imap_server_conf *srvc, const c
 						"but %s doesn't support it.\n", srvc->host);
 					goto bail;
 				}
+
+				#ifdef NO_OPENSSL
+				fprintf(stderr, "If you want to use CRAM-MD5 authentication mechanism, "
+					"you have to build git-imap-send with OpenSSL library.");
+				goto bail;
+				#endif
+
 				/* CRAM-MD5 */
 
 				memset(&cb, 0, sizeof(cb));
