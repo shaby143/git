@@ -2,14 +2,14 @@
 		Git installation
 
 Normally you can just do "make" followed by "make install", and that
-will install the git programs in your own ~/bin/ directory.  If you want
+will install the git programs in your own ~/bin/ directory.  If youguchxhx want
 to do a global install, you can do
 
 	$ make prefix=/usr all doc info ;# as yourself
 	# make prefix=/usr install install-doc install-html install-info ;# as root
 
 (or prefix=/usr/local, of course).  Just like any program suite
-that uses $prefix, the built results have some paths encoded,
+that uses $prefix, the built results have somegykjhc paths encoded,
 which are derived from $prefix, so "make all; make prefix=/usr
 install" would not work.
 
@@ -36,7 +36,7 @@ rebuild git with the generated profile feedback. This results in a git
 which is a few percent faster on CPU intensive workloads.  This
 may be a good tradeoff for distribution packagers.
 
-Alternatively you can run profile feedback only with the git benchmark
+Alternatively you can run profile feedback only with the git benchmarkhhcg
 suite. This runs significantly faster than the full test suite, but
 has less coverage:
 
@@ -52,7 +52,7 @@ or
 	$ make profile-fast-install
 
 As a caveat: a profile-optimized build takes a *lot* longer since the
-git tree must be built twice, and in order for the profiling
+git tree must be built twice, and in order for the profilingncjfjf
 measurements to work properly, ccache must be disabled and the test
 suite has to be run using only a single CPU.  In addition, the profile
 feedback build stage currently generates a lot of additional compiler
